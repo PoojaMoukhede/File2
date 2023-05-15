@@ -1,9 +1,9 @@
 import socket
 from tkinter import *
-from tkinter import filedialog
+from tkinter import filedialog , StringVar
 from tkinter import ttk
 import os
-
+from tkinterdnd2 import *
 
 def select_file():
     file_path = filedialog.askopenfilename(title="Select File")
@@ -45,14 +45,26 @@ def send_file():
         # Close the socket connection
         s.close()
 
+    # for sending file
 def send_button_clicked():
     send_button.config(state=DISABLED)
     send_file()
     send_button.config(state=NORMAL)
 
+   # Drag and drop functionality 
+def on_file_drop(event):
+    file_path = event.data
+    file_entry.delete(0, END)
+    file_entry.insert(END, file_path)
+    file_status.config(text="File selected: " + file_path)
+
+   # Get path of file in label and entry
+def get_path(event):
+    pathLabel.configure(text=event.data)
 
 # Create the UI
-root = Tk()
+# root = Tk()
+root = TkinterDnD.Tk()
 root.title("Client (Sender)")
 root.configure(bg='#f4fdfe')
 icon = PhotoImage(file='../assets/send.png')
@@ -91,5 +103,14 @@ send_button = Button(root, text="Send", command=send_button_clicked)
 send_button.configure(width=16,height=1,bg='royal blue',fg='white',font=('Arial',10,'bold'))
 send_button.pack()
 send_button.place(x=200,y=150)
+nameVar = StringVar()
+
+file_entry.drop_target_register(DND_FILES)
+file_entry.dnd_bind('<<Drop>>', on_file_drop)
+
+# Register drop target for pathLabel
+pathLabel = Label(root, text="Drag and drop here")
+pathLabel.drop_target_register(DND_FILES)
+pathLabel.dnd_bind('<<Drop>>', get_path)
 
 root.mainloop()
