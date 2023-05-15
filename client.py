@@ -10,6 +10,8 @@ def select_file():
     file_entry.delete(0, END)
     file_entry.insert(END, file_path)
     file_status.config(text="File selected: " + file_path)
+    
+# accepting one file at a time 
 def send_file():
     # Get the server IP address
     server_ip = server_entry.get()
@@ -60,11 +62,11 @@ def on_file_drop(event):
 
    # Get path of file in label and entry
 def get_path(event):
-    pathLabel.configure(text=event.data)
+    filePathLabel.configure(text=event.data)
 
 # Create the UI
-# root = Tk()
-root = TkinterDnD.Tk()
+root = Tk()
+# root = TkinterDnD.Tk()
 root.title("Client (Sender)")
 root.configure(bg='#f4fdfe')
 icon = PhotoImage(file='../assets/send.png')
@@ -105,12 +107,16 @@ send_button.pack()
 send_button.place(x=200,y=150)
 nameVar = StringVar()
 
+# visible path in entry field
 file_entry.drop_target_register(DND_FILES)
 file_entry.dnd_bind('<<Drop>>', on_file_drop)
 
-# Register drop target for pathLabel
-pathLabel = Label(root, text="Drag and drop here")
-pathLabel.drop_target_register(DND_FILES)
-pathLabel.dnd_bind('<<Drop>>', get_path)
+# Register drop target for filePathLabel
+filePathLabel = Label(root, text="Drag and drop here")
+filePathLabel.drop_target_register(DND_FILES)
+filePathLabel.dnd_bind('<<Drop>>', get_path)
+
 
 root.mainloop()
+
+
